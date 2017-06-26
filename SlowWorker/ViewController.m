@@ -47,18 +47,35 @@
     dispatch_async(queue, ^{
         NSString *fetchedData = [self fetchSomethingFromServer];
         NSString *processedData = [self processData:fetchedData];
-        NSString *firstResult = [self calculateFirstResult:processedData];
-        NSString *secondResult = [self calculateSecondResult:processedData];
+        //NSString *firstResult = [self calculateFirstResult:processedData];
+        //NSString *secondResult = [self calculateSecondResult:processedData];
         
-        NSString *resultsSummary = [NSString stringWithFormat:@"First: [%@]\nSecond: [%@]", firstResult,secondResult];
-        //элементы UIKit не потокобезопасны поэтому делаем в основном потоке
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.resultsTextView.text = resultsSummary;
-            //выключается анимация вертелки
-            self.startButton.enabled = YES;
-            self.startButton.alpha = 1.0f;
-            [self.spinner stopAnimating];
+        __block NSString *firstResult;
+        __block NSString *secondResult;
+        //распаралелеливаем
+        dispatch_group_t gpoup = dispatch_group_create();
+        dispatch_group_async(gpoup, queue, ^{
+            firstResult = [self calculateFirstResult:processedData];
         });
+        dispatch_group_async(gpoup, queue, ^{
+            secondResult = [self calculateSecondResult:processedData];
+        });
+        
+        //помощью функции dispatch_group_notify() можно указать дополнительный блок, который будет выполняться по завершении всех блоков в группе.
+        dispatch_group_notify(gpoup, queue, ^{
+            NSString *resultsSummary = [NSString stringWithFormat:@"First: [%@]\nSecond: [%@]", firstResult,secondResult];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.resultsTextView.text = resultsSummary;
+                //выключается анимация вертелки
+                self.startButton.enabled = YES;
+                self.startButton.alpha = 1.0f;
+                [self.spinner stopAnimating];
+            });
+        });
+        
+        //элементы UIKit не потокобезопасны поэтому делаем в основном потоке
+
         NSDate *endTime = [NSDate date]; NSLog(@"Completed in %f seconds",
                                                [endTime timeIntervalSinceDate:startTime]);
     });
