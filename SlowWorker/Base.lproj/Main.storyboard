@@ -35,19 +35,26 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="ghN-Ng-yHR">
+                                <rect key="frame" x="241" y="45" width="20" height="20"/>
+                                <color key="color" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="iXc-zY-gf7" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="AfV-8b-vgz"/>
+                            <constraint firstItem="ghN-Ng-yHR" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="25" id="Ggr-W5-JOw"/>
                             <constraint firstItem="Z2D-1s-F5h" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="Nok-RY-dli"/>
                             <constraint firstItem="Z2D-1s-F5h" firstAttribute="centerX" secondItem="iXc-zY-gf7" secondAttribute="centerX" id="RuU-zt-isd"/>
                             <constraint firstItem="Z2D-1s-F5h" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gq7-e2-bEj"/>
                             <constraint firstItem="iXc-zY-gf7" firstAttribute="top" secondItem="Z2D-1s-F5h" secondAttribute="bottom" constant="29" id="iFD-h7-xOH"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="iXc-zY-gf7" secondAttribute="bottom" constant="230" id="rxI-00-FVH"/>
+                            <constraint firstItem="ghN-Ng-yHR" firstAttribute="leading" secondItem="Z2D-1s-F5h" secondAttribute="trailing" constant="8" id="xJM-bo-zOK"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="resultsTextView" destination="iXc-zY-gf7" id="aA3-4t-hMY"/>
+                        <outlet property="spinner" destination="ghN-Ng-yHR" id="fVG-nA-pez"/>
                         <outlet property="startButton" destination="Z2D-1s-F5h" id="wQt-3x-OwW"/>
                     </connections>
                 </viewController>

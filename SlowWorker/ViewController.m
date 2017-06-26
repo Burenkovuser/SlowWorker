@@ -37,17 +37,33 @@
 
 - (IBAction)doWork:(id)sender {
     NSDate *startTime = [NSDate date];
-    NSString *fetchedData = [self fetchSomethingFromServer];
-    NSString *processedData = [self processData:fetchedData];
-    NSString *firstResult = [self calculateFirstResult:processedData];
-    NSString *secondResult = [self calculateSecondResult:processedData];
     
-    NSString *resultsSummary = [NSString stringWithFormat:@"First: [%@]\nSecond: [%@]", firstResult,secondResult];
-    self.resultsTextView.text = resultsSummary;
-    NSDate *endTime = [NSDate date]; NSLog(@"Completed in %f seconds",
-                                            [endTime timeIntervalSinceDate:startTime]);
-                                           }
-                                          
+    //при нажатии кнопки включается анимация крутилки
+    self.startButton.enabled = NO;
+    self.startButton.alpha = 0.5f;
+    [self.spinner startAnimating];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);//основной поток стандартный приоретет (цифра не используется зарезервирована apple)
+    dispatch_async(queue, ^{
+        NSString *fetchedData = [self fetchSomethingFromServer];
+        NSString *processedData = [self processData:fetchedData];
+        NSString *firstResult = [self calculateFirstResult:processedData];
+        NSString *secondResult = [self calculateSecondResult:processedData];
+        
+        NSString *resultsSummary = [NSString stringWithFormat:@"First: [%@]\nSecond: [%@]", firstResult,secondResult];
+        //элементы UIKit не потокобезопасны поэтому делаем в основном потоке
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.resultsTextView.text = resultsSummary;
+            //выключается анимация вертелки
+            self.startButton.enabled = YES;
+            self.startButton.alpha = 1.0f;
+            [self.spinner stopAnimating];
+        });
+        NSDate *endTime = [NSDate date]; NSLog(@"Completed in %f seconds",
+                                               [endTime timeIntervalSinceDate:startTime]);
+    });
+
+}
 
 
 - (void)viewDidLoad {

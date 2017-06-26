@@ -12,7 +12,9 @@
 
 @property(nonatomic, weak) IBOutlet UIButton *startButton;
 @property(nonatomic, weak) IBOutlet UITextView *resultsTextView;
+@property(nonatomic, weak) IBOutlet UIActivityIndicatorView *spinner;
 
+-(IBAction)doWork:(id)sender;
 
 @end
 
